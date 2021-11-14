@@ -18,12 +18,6 @@
             dispatch('day-click', date.getTime()/1000);
         } else {
             dispatch('day-click', date);
-            // dispatch('day-click', {
-            //     day: date.getDate(),
-            //     month: date.getMonth()+1,
-            //     year: date.getFullYear(),
-            //     date: date 
-            // });
         }
     }
 </script>
@@ -45,7 +39,7 @@
         padding-bottom: 100%;
     }
     .day:hover, .day:focus {
-        background-color: rgb(227, 241, 250);
+        background-color: var(--clr-bg-h);
     }
     .day > div {
         display: flex;
@@ -58,7 +52,7 @@
         top: 0;
     }
     .inactive {
-        background-color: rgb(133, 151, 161);
+        background-color: var(--clr-bg-d);
     }
     .description {
         margin-bottom: 0.5rem;
@@ -80,7 +74,7 @@
         cursor: pointer;
     }
     .event:hover {
-        background-color: rgb(185, 209, 224);
+        background-color: var(--clr-bg-h);
     }
 </style>
 
@@ -91,7 +85,7 @@
     on:click={click}>
     <div>
         <div class="description">
-            <span>{day}.</span>
+            <span>{day}</span>
             {#if weekday}
             <!-- <span>{weekday}</span> -->
             {/if}

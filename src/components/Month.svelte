@@ -111,17 +111,21 @@
         const firstMonthDay = new Date(year, getDate().getMonth(), 1);
         for(let i=1; i<=numDays; i++) {
             let dayDate = new Date(getDate().getFullYear(), getDate().getMonth(), i);
+            let dayInactive = false;
+            if(dayDate.getDay() === 0 || dayDate.getDay() === 6) {
+                // Saturday or sunday
+                dayInactive = true;
+            }
             monthDays.push({
                 day: dayDate.getDate(),
                 month: dayDate.getMonth()+1,
                 year: dayDate.getFullYear(),
                 weekday: dayDate.getDay(),
-                inactive: false,
+                inactive: dayInactive,
                 holiday: false
             });
         }
         let orderDiff = firstMonthDay.getDay() - firstDayOrder;
-        console.log(firstMonthDay.toLocaleString(), firstDayOrder);
         if(orderDiff < 0) {
             orderDiff = orderDiff + 7;
         }

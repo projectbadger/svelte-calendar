@@ -1,9 +1,16 @@
 <script>
     import MonthView from './MonthView.svelte';
+    import SelectNumber from '../components/SelectNumber.svelte'
+
     import DayView from './DayView.svelte';
     export let year = 0;
     export let month = 0;
     export let day = 0;
+    export let classes = {
+        colorBg: "#fff",
+        colorBgDisabled: "rgb(133, 151, 161)",
+        colorBgHover: "rgb(185, 209, 224)"
+    }
     if(year === 0 || month === 0 || day === 0) {
         let currentDate = new Date();
         if(year === 0) {
@@ -21,6 +28,12 @@
     export let firstDayOrder = 3;
     export let unixValue = false;
 
+    const getCssVariablesString = () => {
+        console.log("Setting css vars");
+        return "--clr-bg:"+classes.colorBg+";"+
+            "--clr-bg-d:"+classes.colorBgDisabled+";"+
+            "--clr-bg-h:"+classes.colorBgHover+";";
+    }
     const setYearView = () => {
         view = 0b00000001;
     }
@@ -44,7 +57,7 @@
     }
 </style>
 
-<div class="calendar">
+<div class="calendar" style="{getCssVariablesString()}">
     <MonthView
         firstDayOrder={firstDayOrder}
         unixValue={unixValue}

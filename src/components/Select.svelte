@@ -3,16 +3,9 @@
     export let value = 0;
     let selectedText = "";
     let selectedIndex = -1;
-    export let classes = {
-        selectBackgroundColor: "#fff",
-        selectItemsBackgroundColor: "#fff",
-        selectSelectedBackgroundColor: "#aaa"
-    };
-    export let selectedBold = true;
     let container;
     let selectElement;
     let selectedElement;
-    let selectItems;
     let selectedOption = {
         text: " ",
         index: -1,
@@ -29,7 +22,6 @@
     }
     const closeAllSelect = (e) => {
         e.stopPropagation();
-        console.log(e)
         showOptions = false;
         setCloseListener(false);
     };
@@ -44,7 +36,6 @@
     const selectClick = (e) => {
         e.stopPropagation();
         showOptions = showOptions^true;
-        // console.log("This, selectedElement", this, selectedElement);
         selectedElement.classList.toggle("select-arrow-active");
         setCloseListener(true);
     }
@@ -58,7 +49,6 @@
         setSelectedOption(value);
         closeAllSelect(e);
         dispatch("change", value);
-        // console.log("Value:", selectElement.value)
     }
 
     const setSelectedOption = (value) => {
@@ -73,7 +63,6 @@
             }
         }
         if(!foundSelected && optionsArr.length > 0) {
-            console.log("Selected option not found, setting the first one", value);
             selectedOption = optionsArr[0];
         }
         optionsArr = optionsArr;
@@ -100,17 +89,11 @@
     }
 
     onMount(() => {
-        // console.log("Select element:", selectElement);
         if(selectElement.selectedIndex < 0) {
             selectElement.selectedIndex = 0;
         }
-        // selectedIndex = selectElement.selectIndex;
-        selectedElement.innerHTML, selectedText = selectElement.options[selectElement.selectedIndex].innerHTML;
-
         setOptionsArray();
-        console.log("Select Value:", value)
     });
-    // document.addEventListener("click", closeAllSelect);
 </script>
 
 <style>
@@ -120,23 +103,6 @@
     .select-container select {
         display: none;
     }
-    .selected-div {
-        background-color: grey;
-    }
-    .selected-div:after {
-        position: absolute;
-        content: "";
-        top: 14px;
-        right: 10px;
-        width: 0;
-        height: 0;
-        border: 6px solid transparent;
-        /* border-color: #aaa transparent transparent transparent; */
-    }
-    .select-selected .select-arrow-active:after {
-        border-color: transparent transparent #aaa transparent;
-        top: 7px;
-    }
     /* style the items (options), including the selected item: */
     .select-items div,.select-selected {
         /* color: #aaa; */
@@ -145,39 +111,39 @@
         border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
         cursor: pointer;
     }
-        /* Style items (options): */
+    /* Style items (options): */
     .select-items {
         position: absolute;
         display: flex;
         flex-direction: column;
-        background-color: DodgerBlue;
+        /* background-color: DodgerBlue; */
+        background-color: var(--clr-bg);
         top: 100%;
         left: 0;
         right: 0;
         z-index: 99;
     }
-
+    .select-selected:hover, .select-selected:focus {
+        background-color: var(--clr-bg-h);
+    }
     .select-items div:hover, .same-as-selected {
-        background-color: rgba(0, 0, 0, 0.1);
+        /* background-color: rgba(0, 0, 0, 0.1); */
+        background-color: var(--clr-bg-h);
     }
 </style>
 
-<div class="select-container"
-    style="background-color:{classes.selectBackgroundColor}"
-    bind:this={container}>
+<div class="select-container" bind:this={container}>
     <select bind:value={value} bind:this={selectElement} style="display:none">
         <slot />
     </select>
     <div class="select-selected"
-        style="background-color:{classes.selectBackgroundColor};{showOptions ? "visibility:hidden;" : ""}"
+        style="{showOptions ? "visibility:hidden;" : ""}"
         bind:this={selectedElement}
         on:click|preventDefault={(e) => selectClick(e)}>
         {selectedOption.text}
     </div>
     {#if showOptions}
-    <div class="select-items"
-        style="background-color:{classes.selectItemsBackgroundColor}"
-        bind:this={selectItems}>
+    <div class="select-items">
         {#each optionsArr as option}
         <div
             data-value={option.value}

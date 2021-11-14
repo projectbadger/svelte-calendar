@@ -29,21 +29,12 @@
         let leftIndex = -1;
         let rightIndex = -1;
         month = parseInt(month);
-        console.log("Setting active year, month", year, month);
         for(let i=0; i<months.length; i++) {
             months[i].status = 0;
             if(months[i].year == year && months[i].month == month) {
                 months[i].status = STATUS_ACTIVE;
                 index = i;
                 dateActive = months[i];
-            // } else if(dateIsNextMonth(year, month, months[i].year, months[i].month)) {
-            //     months[i].status = STATUS_RIGHT;
-            //     rightIndex = i;
-            //     dateRight = months[i];
-            // } else if(dateIsPreviousMonth(year, month, months[i].year, months[i].month)) {
-            //     months[i].status = STATUS_LEFT;
-            //     leftIndex = i;
-            //     dateLeft = months[i];
             } else {
                 months[i].status = 0;
             }
@@ -57,14 +48,12 @@
             months.push(dateActive);
             // return months[months.length-1];
         }
-        // console.log("Date active:", dateActive);
         months = [...months];
     }
     const navigateLeft = () => {
         let newYear = dateActive.year;
         let newMonth = dateActive.month - 1;
         if(newMonth < 1) {
-            // console.log("Navigating left to a new year", newYear, newMonth);
             newYear = newYear - 1;
             newMonth = 12;
         }
@@ -75,7 +64,6 @@
         let newYear = dateActive.year;
         let newMonth = dateActive.month + 1;
         if(newMonth > 12) {
-            // console.log("Navigating right to a new year", newYear, newMonth);
             newYear = newYear + 1;
             newMonth = 1;
         }
@@ -95,6 +83,7 @@
 <script>
     import Month from '../components/Month.svelte';
     import Select from '../components/Select.svelte';
+    import SelectNumber from '../components/SelectNumber.svelte';
     import YearSelect from '../components/YearSelect.svelte'
     import { createEventDispatcher } from 'svelte';
 
@@ -137,25 +126,34 @@
         monthsArr = [...getMonths()];
         let navToggle = navigation&0b10000000;
         navigation = STATUS_LEFT|(navToggle^0b10000000);
-        console.log("New left, active, right", monthsArr, navigation);
     }
     const navRight = () => {
         navigateRight();
         monthsArr = [...getMonths()];
         let navToggle = navigation&0b10000000;
         navigation = STATUS_RIGHT|(navToggle^0b10000000);
-        console.log("New left, active, right", monthsArr, navigation);
         navigation = navigation;
     }
     const monthChange = (e) => {
         let m = parseInt(e.detail);
-        console.log("Changing month to", m, monthsToDisplay[m-1])
         let activeDate = getDateActive();
         let y = activeDate.year;
         if(m === 0) {
             m = activeDate.month;
         }
         setActive(y, m);
+        monthsArr = [...getMonths()];
+    }
+    const yearChange = (event) => {
+        if(event) {
+            let y = parseInt(event.detail);
+            let activeDate = getDateActive();
+            let m = activeDate.month;
+            if(y === 0) {
+                y = activeDate.year;
+            }
+            setActive(y, m);
+        }
         monthsArr = [...getMonths()];
     }
     const setYearSelect = (active, event) => {
@@ -170,7 +168,6 @@
             setActive(y, m);
         }
         monthsArr = [...getMonths()];
-        console.log("Select year active:", yearSelectActive);
     }
     const dayClicked = (e) => {
         dispatch("day-click", e.detail);
@@ -217,7 +214,7 @@
         margin: 0;
     }
     .selector:hover {
-        background-color: rgb(227, 241, 250);
+        background-color: var(--clr-bg-h);
     }
 </style>
 
@@ -236,7 +233,8 @@
             <option value={index+1}>{monthOption}</option>
             {/each}
         </Select></span>
-        <span class="selector" on:click={() => setYearSelect(true, false)}><b>{aMonth.year}</b></span>
+        <span><SelectNumber value={aMonth.year} on:change={(e) => yearChange(e)} /></span>
+        <!-- <span class="selector" on:click={() => setYearSelect(true, false)}><b>{aMonth.year}</b></span> -->
         <span><div class="triangle tr-right"
             on:click="{()=>navRight()}"></div></span>
     </div>

@@ -1,16 +1,11 @@
 <script>
 	import Calendar from './views/Calendar.svelte'
-	import Select from './components/Select.svelte'
 	export let name;
 </script>
 
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-	<!-- <Select>
-		<option value="0">Option 1</option>
-		<option value="1">Option 2</option>
-	</Select> -->
 	<Calendar
 		firstDayOrder=1
 		/>
