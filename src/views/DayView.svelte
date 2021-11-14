@@ -1,8 +1,16 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
+
     export let events = [];
     export let year = 1970;
     export let month = 1;
     export let day = 1;
+
+    const dispatch = createEventDispatcher();
+    const click = () => {
+        // console.log("Day.svelte: clicked", day, month, year);
+        dispatch('day-click', {day: day, month: month, year: year});
+    }
 
     let date = new Date(year, month, day);
 
@@ -36,12 +44,12 @@
         -webkit-transform: rotate(135deg);
     }
 
-    .h3m {
+    /* .h3m {
         margin-bottom: 0;
-    }
+    } */
 </style>
 
-<div>
+<div on:click={click()}>
     <div class="description">
         <span><i class="arrow left"></i></span>
         <span>{date.toValue()}</span>

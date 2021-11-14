@@ -1,4 +1,6 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
+
     export let day = 1;
     export let month = 1;
     export let year = 1970;
@@ -6,14 +8,29 @@
     export let inactive = false;
     export let holiday = false;
     export let events = [];
+    export let unixValue = false;
 
-    const date = new Date(year, month, day);
+    const date = new Date(year, month-1, day);
+
+    const dispatch = createEventDispatcher();
+    const click = () => {
+        if(unixValue) {
+            dispatch('day-click', date.getTime()/1000);
+        } else {
+            dispatch('day-click', date);
+            // dispatch('day-click', {
+            //     day: date.getDate(),
+            //     month: date.getMonth()+1,
+            //     year: date.getFullYear(),
+            //     date: date 
+            // });
+        }
+    }
 </script>
 
 <style>
     .day {
-        /* width: 5rem;
-        height: 5rem; */
+        box-sizing: border-box;
         display: block;
         position: relative;
         width: 100%;
@@ -34,6 +51,7 @@
         display: flex;
         flex-direction: column;
         position: absolute;
+        margin: 0;
         width: 100%;
         height: 100%;
         left: 0;
@@ -43,15 +61,11 @@
         background-color: rgb(133, 151, 161);
     }
     .description {
-        /* width: 100%; */
         margin-bottom: 0.5rem;
     }
     .events {
         display: block;
-        /* width: 100%; */
-        /* height: 100%; */
         flex-direction: column-reverse;
-        /* border: 1px solid black; */
     }
     .events ul, .events li {
         margin: 0;
@@ -71,9 +85,10 @@
 </style>
 
 <div class="day {inactive?"inactive":""} {holiday?"holiday":""}"
-    data-day="{day}"
-    data-month="{month}"
-    data-year="{year}">
+    data-day={day}
+    data-month={month}
+    data-year={year}
+    on:click={click}>
     <div>
         <div class="description">
             <span>{day}.</span>
@@ -85,7 +100,7 @@
         <div class="events">
             {#if events.length}
             <ul>
-                {#each events as event}
+            {#each events as event}
                 <li>
                     <div class="event">
                         {event.name}

@@ -1,58 +1,23 @@
 <script context="module">
-    const currentDate = new Date(1970, 1, 1);
+    const currentDate = new Date(1970, 0, 1);
     const getDate = () => {
         return currentDate;
     }
     const setDate = (year, month, day=1) => {
         currentDate.setYear(year);
-        currentDate.setMonth(month);
-        currentDate.setDate(day);
+        currentDate.setMonth(month-1, day);
     }
     const dateIncrementDay = (date) => {
-        if(date.getDay() == new Date(date.getFullYear(), date.getMonth(), 0)) {
-            // Last month date.
-            if(date.getMonth() == 12) {
-                date.setYear(date.getFullYear()+1);
-                date.setMonth(1);
-                date.setDay(1);
-            } else {
-                date = new Date(date.getFullYear(), date.getMonth()+1, 1);
-            }
-        } else {
-            date.setDate(date.getDay()+1);
-        }
+        date.setDate(date.getDate()+1);
     }
     const dateDecrementDay = (date) => {
-        if(date.getDay() == 1) {
-            if(date.getMonth() == 1) {
-                date.setYear(date.getFullYear()-1);
-                date.setMonth(12);
-                date.setDay(31);
-            } else {
-                date.setMonth(date.getMonth()-1);
-                date.setDate(0);
-            }
-        } else {
-            date.setDate(date.getDate()-1);
-        }
+        date.setDate(date.getDate()-1);
     }
     const dateIncrementMonth = (date) => {
-        if(date.getMonth() === 12) {
-            date.setYear(date.getFullYear() + 1);
-            date.setMonth(1);
-        } else {
-            date.setMonth(date.getMonth() + 1);
-        }
+        date.setMonth(date.getMonth()+1, 1);
     }
     const dateDecrementMonth = (date) => {
-        if(date.getMonth() == 1) {
-            date.setYear(date.getFullYear()-1);
-            date.setMonth(12);
-            // date.setDay(31);
-        } else {
-            date.setMonth(date.getMonth()-1);
-            // date.setDate(0);
-        }
+        date.setMonth(date.getMonth()-1, 1);
     }
     const dateIsNextMonth = (year1, month1, year2, month2) => {
         if(month1 === 12) {
@@ -96,14 +61,17 @@
 
 <script>
     import Day from './Day.svelte';
+    import { createEventDispatcher } from 'svelte';
 
     export let month = 1;
     export let year = 1970;
-    // export let events = [];
     export let firstDayOrder = 1;
+    export let value = 0;
+    export let unixValue = false;
 
+    const dispatch = createEventDispatcher();
     let days = [];
-    // Insure numbers;
+    // Ensure numbers;
     month = month - 0;
     year = year - 0;
     firstDayOrder = firstDayOrder - 0
@@ -118,8 +86,24 @@
     weekday[6] = "Saturday";
 
     // Set on last day of month.
-    // date = new Date(year, month, 0);
-    setDate(year, month, 0);
+    setDate(year, month+1, 0);
+    const dayClicked = (date) => {
+        if(typeof date !== 'undefined') {
+            if(unixValue) {
+                value = date;
+                dispatch('day-click', date);
+                // let newDate = new Date(date*1000);
+            } else {
+                value = Math.round(date.get / 1000);
+                dispatch('day-click', date);
+                // dispatch('day-click', {
+                //     year: date.getFullYear(),
+                //     month: date.getMonth()+1,
+                //     day: date.getDate()
+                // });
+            }
+        }
+    }
     const fillDays = () => {
         const numDays = getDate().getDate();
         let monthDays = [];
@@ -129,7 +113,7 @@
             let dayDate = new Date(getDate().getFullYear(), getDate().getMonth(), i);
             monthDays.push({
                 day: dayDate.getDate(),
-                month: dayDate.getMonth(),
+                month: dayDate.getMonth()+1,
                 year: dayDate.getFullYear(),
                 weekday: dayDate.getDay(),
                 inactive: false,
@@ -137,6 +121,7 @@
             });
         }
         let orderDiff = firstMonthDay.getDay() - firstDayOrder;
+        console.log(firstMonthDay.toLocaleString(), firstDayOrder);
         if(orderDiff < 0) {
             orderDiff = orderDiff + 7;
         }
@@ -144,12 +129,29 @@
             dateDecrementDay(firstMonthDay);
             monthDays = [{
                 day: firstMonthDay.getDate(),
-                month: firstMonthDay.getMonth(),
+                month: firstMonthDay.getMonth()+1,
                 year: firstMonthDay.getFullYear(),
                 weekday: firstMonthDay.getDay(),
                 inactive: true,
                 holiday: false
             }, ...monthDays];
+        }
+        let nextMonthDiff = 7 - monthDays.length % 7;
+        if(nextMonthDiff === 7) {
+            nextMonthDiff = 0;
+        }
+        firstMonthDay.setFullYear(year);
+        firstMonthDay.setMonth(getDate().getMonth(), 1);
+        dateIncrementMonth(firstMonthDay);
+        for(let i=0; i<nextMonthDiff; i++) {
+            monthDays.push({
+                day: firstMonthDay.getDate()+i,
+                month: firstMonthDay.getMonth()+1,
+                year: firstMonthDay.getFullYear(),
+                weekday: firstMonthDay.getDay(),
+                inactive: true,
+                holiday: false
+            });
         }
         days = monthDays;
     }
@@ -175,12 +177,14 @@
         {#if days.length}
             {#each days as day}
             <Day
-                day="{day.day}"
-                month="{day.month}"
-                year="{day.year}"
-                weekday="{day.weekday}"
-                inactive="{day.inactive}"
-                holiday="{day.holiday}" />
+                day={day.day}
+                month={day.month}
+                year={day.year}
+                weekday={day.weekday}
+                inactive={day.inactive}
+                holiday={day.holiday}
+                unixValue={unixValue}
+                on:day-click={(e) => dayClicked(e.detail)} />
             {/each}
         {/if}
     </div>

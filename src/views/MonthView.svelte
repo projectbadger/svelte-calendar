@@ -28,6 +28,8 @@
         let index = -1;
         let leftIndex = -1;
         let rightIndex = -1;
+        month = parseInt(month);
+        console.log("Setting active year, month", year, month);
         for(let i=0; i<months.length; i++) {
             months[i].status = 0;
             if(months[i].year == year && months[i].month == month) {
@@ -47,20 +49,22 @@
             }
         }
         if(index < 0) {
-            months.push({
+            dateActive = {
                 year: year,
                 month: month,
                 status: STATUS_ACTIVE,
-            });
-            dateActive = months[months.length-1];
+            };
+            months.push(dateActive);
             // return months[months.length-1];
         }
-        months = months;
+        // console.log("Date active:", dateActive);
+        months = [...months];
     }
     const navigateLeft = () => {
         let newYear = dateActive.year;
         let newMonth = dateActive.month - 1;
         if(newMonth < 1) {
+            // console.log("Navigating left to a new year", newYear, newMonth);
             newYear = newYear - 1;
             newMonth = 12;
         }
@@ -71,6 +75,7 @@
         let newYear = dateActive.year;
         let newMonth = dateActive.month + 1;
         if(newMonth > 12) {
+            // console.log("Navigating right to a new year", newYear, newMonth);
             newYear = newYear + 1;
             newMonth = 1;
         }
@@ -89,51 +94,110 @@
 
 <script>
     import Month from '../components/Month.svelte';
+    import Select from '../components/Select.svelte';
+    import YearSelect from '../components/YearSelect.svelte'
+    import { createEventDispatcher } from 'svelte';
 
-    export let year = 1970;
-    export let month = 1;
+    export let year = 0;
+    export let month = 0;
+    if(year === 0 || month === 0) {
+        let currentDate = new Date();
+        if(year === 0) {
+            year = currentDate.getFullYear();
+        }
+        if(month === 0) {
+            month = currentDate.getMonth()+1;
+        }
+    }
     export let firstDayOrder = 1;
+    export let value = 0;
+    export let monthsToDisplay = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
+    export let unixValue = false;
+    const dispatch = createEventDispatcher();
     let navigation = STATUS_ACTIVE;
     let monthsArr = [];
+    let yearSelectActive = false;
     setActive(year, month);
     monthsArr = getMonths();
-    // let activeMonths = getActiveMonths();
     const navLeft = () => {
         navigateLeft();
-        monthsArr = getMonths();
-        // activeMonths = getActiveMonths();
-        // activeMonths = activeMonths;
+        monthsArr = [...getMonths()];
         let navToggle = navigation&0b10000000;
         navigation = STATUS_LEFT|(navToggle^0b10000000);
-        // let navToggle = navigation&0b10000000^0b10000000;
         console.log("New left, active, right", monthsArr, navigation);
     }
     const navRight = () => {
         navigateRight();
-        // activeMonths = getActiveMonths();
-        // activeMonths = activeMonths;
         monthsArr = [...getMonths()];
         let navToggle = navigation&0b10000000;
         navigation = STATUS_RIGHT|(navToggle^0b10000000);
-        // navigation = STATUS_RIGHT^(0b10000000&STATUS_RIGHT);
         console.log("New left, active, right", monthsArr, navigation);
         navigation = navigation;
+    }
+    const monthChange = (e) => {
+        let m = parseInt(e.detail);
+        console.log("Changing month to", m, monthsToDisplay[m-1])
+        let activeDate = getDateActive();
+        let y = activeDate.year;
+        if(m === 0) {
+            m = activeDate.month;
+        }
+        setActive(y, m);
+        monthsArr = [...getMonths()];
+    }
+    const setYearSelect = (active, event) => {
+        yearSelectActive = active;
+        if(event) {
+            let y = event.detail.year;
+            let activeDate = getDateActive();
+            let m = activeDate.month;
+            if(y === 0) {
+                y = activeDate.year;
+            }
+            setActive(y, m);
+        }
+        monthsArr = [...getMonths()];
+        console.log("Select year active:", yearSelectActive);
+    }
+    const dayClicked = (e) => {
+        dispatch("day-click", e.detail);
     }
 </script>
 
 <style>
+    .description {
+        width: 100%;
+        margin: 0;
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        grid-gap: 0px;
+    }
     .description span {
         justify-content: center;
         align-items: center;
-        padding-bottom: 10px;
-        margin-bottom: 1rem;
+    }
+    .months {
+        margin: 0;
     }
     .triangle {
         width: 0;
         height: 0;
         border-top: 0.4em solid transparent;
         border-bottom: 0.4em solid transparent;
-        margin: 0.5rem;
+        margin-top: 0.8rem;
         cursor: pointer;
     }
     .tr-left {
@@ -144,28 +208,47 @@
         border-left: 0.8em solid #555;
         float: right;
     }
-
+    .selector {
+        display: inline-block;
+        text-align: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0.5rem;
+        margin: 0;
+    }
+    .selector:hover {
+        background-color: rgb(227, 241, 250);
+    }
 </style>
 
 <div class="container">
     {#each monthsArr as aMonth}
-    {#if aMonth.status&STATUS_ACTIVE}
+    {#if aMonth.status&STATUS_ACTIVE&&yearSelectActive}
+    <YearSelect
+        year={aMonth.year}
+        on:close={(e) => setYearSelect(false, e)} />
+    {:else if aMonth.status&STATUS_ACTIVE}
     <div class="description">
-        <h2>
-            <span><div class="triangle tr-left"
-                on:click="{()=>navLeft()}"></div></span>
-            <span><b>Month {aMonth.month}</b></span>
-            <span><div class="triangle tr-right"
-                on:click="{()=>navRight()}"></div></span>
-        </h2>
+        <span><div class="triangle tr-left"
+            on:click="{()=>navLeft()}"></div></span>
+        <span><Select value={aMonth.month} on:change={(e) => monthChange(e)}>
+            {#each monthsToDisplay as monthOption, index}
+            <option value={index+1}>{monthOption}</option>
+            {/each}
+        </Select></span>
+        <span class="selector" on:click={() => setYearSelect(true, false)}><b>{aMonth.year}</b></span>
+        <span><div class="triangle tr-right"
+            on:click="{()=>navRight()}"></div></span>
     </div>
     <div class="months">
         <div class="slider">
             <Month
-                year="{aMonth.year}"
-                month="{aMonth.month}"
-                firstDayOrder="{firstDayOrder}"
-                />
+                year={aMonth.year}
+                month={aMonth.month}
+                firstDayOrder={firstDayOrder}
+                unixValue={unixValue}
+                bind:value={value}
+                on:day-click={(e)=>dayClicked(e)} />
         </div>
     </div>
     {/if}
