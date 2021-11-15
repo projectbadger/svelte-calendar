@@ -1,12 +1,4 @@
 <script context="module">
-    const currentDate = new Date(1970, 0, 1);
-    const getDate = () => {
-        return currentDate;
-    }
-    const setDate = (year, month, day=1) => {
-        currentDate.setYear(year);
-        currentDate.setMonth(month-1, day);
-    }
     const dateIncrementDay = (date) => {
         date.setDate(date.getDate()+1);
     }
@@ -48,8 +40,6 @@
         return false;
     }
     export {
-        getDate,
-        setDate,
         dateIncrementDay,
         dateDecrementDay,
         dateIncrementMonth,
@@ -61,6 +51,7 @@
 
 <script>
     import Day from './Day.svelte';
+    import MediaQuery from './MediaQuery.svelte';
     import { createEventDispatcher } from 'svelte';
 
     export let month = 1;
@@ -70,40 +61,74 @@
     export let unixValue = false;
 
     const dispatch = createEventDispatcher();
+
     let days = [];
+    let dayHeaders = [];
     // Ensure numbers;
     month = month - 0;
     year = year - 0;
     firstDayOrder = firstDayOrder - 0
 
-    const weekday = new Array(7);
-    weekday[0] = "Sunday";
-    weekday[1] = "Monday";
-    weekday[2] = "Tuesday";
-    weekday[3] = "Wednesday";
-    weekday[4] = "Thursday";
-    weekday[5] = "Friday";
-    weekday[6] = "Saturday";
+    export let i18n = {
+        monthsToDisplay: [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ],
+        weekdays: [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ]
+    };
 
+    const currentDate = new Date(1970, 0, 1);
+    const getDate = () => {
+        return currentDate;
+    }
+    const setDate = (year, month, day=1) => {
+        currentDate.setYear(year);
+        currentDate.setMonth(month-1, day);
+    }
     // Set on last day of month.
     setDate(year, month+1, 0);
+
     const dayClicked = (date) => {
         if(typeof date !== 'undefined') {
             if(unixValue) {
                 value = date;
                 dispatch('day-click', date);
-                // let newDate = new Date(date*1000);
             } else {
                 value = Math.round(date.get / 1000);
                 dispatch('day-click', date);
-                // dispatch('day-click', {
-                //     year: date.getFullYear(),
-                //     month: date.getMonth()+1,
-                //     day: date.getDate()
-                // });
             }
         }
     }
+    const fillDayHeaders = () => {
+        let orderIndex = firstDayOrder;
+        dayHeaders = [];
+        for(let i=0; i<7; i++) {
+            let weekDayIndex = (orderIndex + i) % 7;
+            dayHeaders.push({
+                index: orderIndex,
+                name: i18n.weekdays[weekDayIndex]
+            });
+        }
+        dayHeaders = [...dayHeaders];
+    };
     const fillDays = () => {
         const numDays = getDate().getDate();
         let monthDays = [];
@@ -159,6 +184,7 @@
         }
         days = monthDays;
     }
+    fillDayHeaders();
     fillDays();
 </script>
 
@@ -168,14 +194,30 @@
     }
     .days {
         display: grid;
-        grid-template-columns: auto auto auto auto auto auto auto;
+        /* grid-template-columns: auto auto auto auto auto auto auto; */
+        grid-template-columns: 14.28% 14.28% 14.28% 14.28% 14.28% 14.28% 14.28%;
         grid-gap: 0px;
+    }
+    .day-header {
+        box-sizing: border-box;
+        display: block;
+        position: relative;
+        width: 100%;
+        overflow: hidden;
     }
 </style>
 
 <div class="month">
-    <div class="description">
-
+    <div class="days">
+        {#each dayHeaders as day}
+        <MediaQuery query="(max-width: 720px)" let:matches>
+            {#if matches}
+            <div class="day-header" data-index={day.index}>{day.name.charAt(0)}</div>
+            {:else}
+            <div class="day-header" data-index={day.index}>{day.name}</div>
+            {/if}
+        </MediaQuery>
+        {/each}
     </div>
     <div class="days">
         {#if days.length}

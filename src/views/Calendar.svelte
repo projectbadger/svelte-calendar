@@ -41,7 +41,6 @@
         view = 0b00000010;
     }
     const setDayView = (e) => {
-        console.log("Setting day view", e);
         view = 0b00000100;
     }
     const setEventView = () => {

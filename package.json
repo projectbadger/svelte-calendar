@@ -1,6 +1,16 @@
 {
-  "name": "svelte-app",
+  "name": "svelte-calendar",
   "version": "1.0.0",
+  "description": "A calendar component for Svelte",
+  "keywords": [
+    "svelte",
+    "calendar"
+  ],
+  "author": "projectbadger",
+  "license": "GPL2",
+  "main": "pkg/index.js",
+  "module": "pkg/index.mjs",
+  "svelte": "src/index.js",
   "private": true,
   "scripts": {
     "build": "rollup -c",

@@ -29,14 +29,26 @@ function serve() {
 	};
 }
 
-const BUNDLE_APP = {
+export default {
 	input: 'src/main.js',
 	output: [
 		{
 			sourcemap: true,
 			format: 'iife',
-			name: 'app',
+			name: 'svelte-calendar-app',
 			file: 'public/build/bundle.js'
+		},
+		{
+			sourcemap: false,
+			format: 'en',
+			name: 'svelte-calendar',
+			file: pkg.module
+		},
+		{
+			sourcemap: true,
+			format: 'umd',
+			name: 'app',
+			file: pkg.main
 		}
 	],
 	plugins: [
@@ -77,68 +89,3 @@ const BUNDLE_APP = {
 		clearScreen: false
 	}
 };
-
-
-const BUNDLE_MODULES = {
-    input: 'src/index.js',
-	output: [
-		{
-			sourcemap: false,
-			format: 'es',
-			name: 'module',
-			file: 'pkg/index.js'
-		},
-		{
-			sourcemap: true,
-			format: 'umd',
-			name: 'module',
-			file: 'pkg/index.mjs'
-		}
-	],
-	plugins: [
-		svelte({
-			compilerOptions: {
-				// enable run-time checks when not in production
-				dev: !production
-			}
-		}),
-		// we'll extract any component CSS out into
-		// a separate file - better for performance
-		css({ output: 'bundle.css' }),
-
-		// If you have external dependencies installed from
-		// npm, you'll most likely need these plugins. In
-		// some cases you'll need additional configuration -
-		// consult the documentation for details:
-		// https://github.com/rollup/plugins/tree/master/packages/commonjs
-		resolve({
-			browser: true,
-			dedupe: ['svelte']
-		}),
-		commonjs(),
-
-		// If we're building for production (npm run build
-		// instead of npm run dev), minify
-		production && terser()
-	]
-}
-
-const COMMON = {
-    // format,
-    // plugins: [
-    //     multiEntry(),
-    //     babel({
-    //         exclude: [
-    //             'node_modules/**'
-    //         ]
-    //     }),
-    //     uglify()
-    //    // ...
-    // ],
-    // sourceMap: true
-    // ...
-}
-export default [
-    Object.assign({}, BUNDLE_APP, COMMON),
-    Object.assign({}, BUNDLE_MODULES, COMMON)
-]
