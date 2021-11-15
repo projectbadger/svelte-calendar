@@ -9,6 +9,14 @@
 	<Calendar
 		firstDayOrder=1
 		/>
+	<Calendar
+		firstDayOrder=6
+		unixValue={true}
+		/>
+	<div style="width: 200px"><Calendar
+		firstDayOrder=1
+		unixValue={true}
+		/></div>
 </main>
 
 <style>

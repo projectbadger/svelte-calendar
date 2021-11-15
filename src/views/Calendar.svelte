@@ -46,6 +46,10 @@
     const setEventView = () => {
         view = 0b00000001;
     }
+    const setDayValue = (e) => {
+        value = e.detail;
+        console.log(value);
+    }
 </script>
 
 <style>
@@ -63,6 +67,6 @@
         bind:year={year}
         bind:month={month}
         bind:value={value}
-        on:day-click={(e)=>setDayView(e)}
+        on:day-click={(e)=>setDayValue(e)}
         />
 </div>

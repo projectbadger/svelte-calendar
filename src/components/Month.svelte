@@ -51,8 +51,7 @@
 
 <script>
     import Day from './Day.svelte';
-    import MediaQuery from './MediaQuery.svelte';
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher, onMount } from 'svelte';
 
     export let month = 1;
     export let year = 1970;
@@ -186,6 +185,11 @@
     }
     fillDayHeaders();
     fillDays();
+
+    let clientWidth = 0;
+    onMount(() => {
+        // clientWidth = 
+    });
 </script>
 
 <style>
@@ -208,15 +212,13 @@
 </style>
 
 <div class="month">
-    <div class="days">
+    <div class="days" bind:clientWidth={clientWidth}>
         {#each dayHeaders as day}
-        <MediaQuery query="(max-width: 720px)" let:matches>
-            {#if matches}
-            <div class="day-header" data-index={day.index}>{day.name.charAt(0)}</div>
+            {#if clientWidth < 720}
+            <div class="day-header" title="{day.name}" data-index={day.index}>{day.name.charAt(0)}</div>
             {:else}
-            <div class="day-header" data-index={day.index}>{day.name}</div>
+            <div class="day-header" title="{day.name}" data-index={day.index}>{day.name}</div>
             {/if}
-        </MediaQuery>
         {/each}
     </div>
     <div class="days">
