@@ -1,14 +1,15 @@
 import Calendar from './views/Calendar.svelte';
+import Day from './components/Day.svelte'
+import Month from './components/Month.svelte'
+import MonthView from './views/MonthView.svelte'
 import Select from './components/Select.svelte'
 import SelectNumber from './components/SelectNumber.svelte'
-
-// export default Calendar;
 
 export {
     Calendar,
     SelectNumber,
-    Select
+    Select,
+    Day,
+    Month,
+    MonthView
 };
-// export default {
-//     Calendar
-// };
