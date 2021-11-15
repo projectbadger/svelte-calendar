@@ -135,18 +135,18 @@
         const firstMonthDay = new Date(year, getDate().getMonth(), 1);
         for(let i=1; i<=numDays; i++) {
             let dayDate = new Date(getDate().getFullYear(), getDate().getMonth(), i);
-            let dayInactive = false;
+            let isHoliday = false;
             if(dayDate.getDay() === 0 || dayDate.getDay() === 6) {
                 // Saturday or sunday
-                dayInactive = true;
+                isHoliday = true;
             }
             monthDays.push({
                 day: dayDate.getDate(),
                 month: dayDate.getMonth()+1,
                 year: dayDate.getFullYear(),
                 weekday: dayDate.getDay(),
-                inactive: dayInactive,
-                holiday: false
+                inactive: false,
+                holiday: isHoliday
             });
         }
         let orderDiff = firstMonthDay.getDay() - firstDayOrder;
@@ -211,8 +211,8 @@
     }
 </style>
 
-<div class="month">
-    <div class="days" bind:clientWidth={clientWidth}>
+<div class="month" bind:clientWidth={clientWidth}>
+    <div class="days">
         {#each dayHeaders as day}
             {#if clientWidth < 720}
             <div class="day-header" title="{day.name}" data-index={day.index}>{day.name.charAt(0)}</div>

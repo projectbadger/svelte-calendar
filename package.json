@@ -1,5 +1,5 @@
 {
-  "name": "svelte-calendar",
+  "name": "@badgeradmin/svelte-calendar",
   "version": "1.0.0",
   "description": "A calendar component for Svelte",
   "keywords": [
@@ -7,9 +7,10 @@
     "calendar"
   ],
   "author": "projectbadger",
-  "license": "GPL2",
+  "license": "GPL-2.0-only",
   "main": "pkg/index.js",
   "module": "pkg/index.mjs",
+  "type": "module",
   "svelte": "src/index.js",
   "private": true,
   "scripts": {
@@ -29,5 +30,13 @@
   },
   "dependencies": {
     "sirv-cli": "^1.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/projectbadger/svelte-calendar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/projectbadger/svelte-calendar/issues"
+  },
+  "homepage": "https://github.com/projectbadger/svelte-calendar#readme"
 }

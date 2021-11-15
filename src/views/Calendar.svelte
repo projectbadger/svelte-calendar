@@ -9,7 +9,8 @@
     export let classes = {
         colorBg: "#fff",
         colorBgDisabled: "rgb(133, 151, 161)",
-        colorBgHover: "rgb(185, 209, 224)"
+        colorBgHover: "rgb(185, 209, 224)",
+        colorBgHoliday: "rgba(0, 0, 0, 0.1)"
     }
     if(year === 0 || month === 0 || day === 0) {
         let currentDate = new Date();
@@ -32,7 +33,8 @@
         console.log("Setting css vars");
         return "--clr-bg:"+classes.colorBg+";"+
             "--clr-bg-d:"+classes.colorBgDisabled+";"+
-            "--clr-bg-h:"+classes.colorBgHover+";";
+            "--clr-bg-h:"+classes.colorBgHover+";"+
+            "--clr-bg-hol:"+classes.colorBgHoliday;
     }
     const setYearView = () => {
         view = 0b00000001;
@@ -60,7 +62,8 @@
     }
 </style>
 
-<div class="calendar" style="{getCssVariablesString()}">
+<div class="calendar" style="{getCssVariablesString()}"
+    data-calendartarget="calendar">
     <MonthView
         firstDayOrder={firstDayOrder}
         unixValue={unixValue}

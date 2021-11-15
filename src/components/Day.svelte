@@ -54,6 +54,9 @@
     .inactive {
         background-color: var(--clr-bg-d);
     }
+    .holiday {
+        background-color: var(--clr-bg-hol);
+    }
     .description {
         margin-bottom: 0.5rem;
     }

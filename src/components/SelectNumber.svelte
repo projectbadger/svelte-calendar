@@ -5,7 +5,7 @@
 
     const dispatch = createEventDispatcher();
 
-    let showOptions = false;
+    export let showOptions = false;
     const incrementValue = () => {
         value = value + 1;
         emitChange();
@@ -29,6 +29,10 @@
         if(e.target.classList.contains("tr-inc-dec-trigger")) {
             return;
         }
+        // let closest = e.target.closest("div[data-calendartarget='calendar']");
+        // if(closest !== null) {
+        //     return;
+        // }
         showOptions = false;
         setCloseListener(false);
     };
@@ -38,6 +42,9 @@
         } else {
             document.removeEventListener("click", closeAllSelect);
         }
+    }
+    if(showOptions) {
+        setCloseListener(true);
     }
 </script>
 

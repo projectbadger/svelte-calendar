@@ -51,6 +51,7 @@
     }
 
     let navigation = STATUS_ACTIVE;
+    let clientWidth;
 
     let monthsArr = [];
     let dateActive;
@@ -104,14 +105,15 @@
         navigation = navigation;
     }
 
+    let showYearSelector = false;
     const monthChange = (e) => {
         let m = parseInt(e.detail);
         let y = dateActive.year;
         if(m === 0) {
             m = dateActive.month;
         }
+        showYearSelector = false;
         setActive(y, m);
-        monthsArr = [...monthsArr];
     }
 
     const yearChange = (event) => {
@@ -124,6 +126,7 @@
             setActive(y, m);
         }
         monthsArr = [...monthsArr];
+        showYearSelector = true;
     }
 
     const dayClicked = (e) => {
@@ -170,19 +173,25 @@
     <div class="description">
         <span><div class="triangle tr-left"
             on:click="{()=>navLeft()}"></div></span>
-        <span><Select value={aMonth.month} on:change={(e) => monthChange(e)}>
-            {#each i18n.monthsToDisplay as monthOption, index}
-            <option value={index+1}>{monthOption}</option>
-            {/each}
-        </Select></span>
-        <span><SelectNumber value={aMonth.year} on:change={(e) => yearChange(e)} /></span>
+        <span>
+            <Select
+                value={aMonth.month}
+                on:change={(e) => monthChange(e)}>
+                {#each i18n.monthsToDisplay as monthOption, index}
+                <option value={index+1}>{monthOption}</option>
+                {/each}
+            </Select>
+        </span>
+        <span>
+            <SelectNumber
+                showOptions={showYearSelector}
+                value={aMonth.year}
+                on:change={(e) => yearChange(e)} />
+            </span>
         <span><div class="triangle tr-right"
             on:click="{()=>navRight()}"></div></span>
     </div>
-    <div class="months">
-        <div class="day-headers">
-            
-        </div>
+    <div class="months" bind:clientWidth={clientWidth}>
         <div>
             <Month
                 year={aMonth.year}
