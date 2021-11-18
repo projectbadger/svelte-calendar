@@ -1,239 +1,284 @@
 <script context="module">
-    const dateIncrementDay = (date) => {
-        date.setDate(date.getDate()+1);
+  const dateIncrementDay = (date) => {
+    date.setDate(date.getDate() + 1);
+  };
+  const dateDecrementDay = (date) => {
+    date.setDate(date.getDate() - 1);
+  };
+  const dateIncrementMonth = (date) => {
+    date.setMonth(date.getMonth() + 1, 1);
+  };
+  const dateDecrementMonth = (date) => {
+    date.setMonth(date.getMonth() - 1, 1);
+  };
+  const dateIsNextMonth = (year1, month1, year2, month2) => {
+    if (month1 === 12) {
+      let yearDiff = year2 - year1;
+      if (yearDiff === 1 && month2 === 1) {
+        return true;
+      }
+      return false;
     }
-    const dateDecrementDay = (date) => {
-        date.setDate(date.getDate()-1);
+    let monthDiff = month2 - month1;
+    if (year1 === year2 && monthDiff === 1) {
+      return true;
     }
-    const dateIncrementMonth = (date) => {
-        date.setMonth(date.getMonth()+1, 1);
+    return false;
+  };
+  const dateIsPreviousMonth = (year1, month1, year2, month2) => {
+    if (month1 === 1) {
+      let yearDiff = year2 - year1;
+      if (yearDiff === -1 && month2 === 12) {
+        return true;
+      }
+      return false;
     }
-    const dateDecrementMonth = (date) => {
-        date.setMonth(date.getMonth()-1, 1);
+    let monthDiff = month2 - month1;
+    if (year1 === year2 && monthDiff === -1) {
+      return true;
     }
-    const dateIsNextMonth = (year1, month1, year2, month2) => {
-        if(month1 === 12) {
-            let yearDiff = year2 - year1;
-            if(yearDiff === 1 && month2 === 1) {
-                return true;
-            }
-            return false;
-        }
-        let monthDiff = month2 - month1;
-        if(year1 === year2 && monthDiff === 1) {
-            return true;
-        }
-        return false;
-    }
-    const dateIsPreviousMonth = (year1, month1, year2, month2) => {
-        if(month1 === 1) {
-            let yearDiff = year2 - year1;
-            if(yearDiff === -1 && month2 === 12) {
-                return true;
-            }
-            return false;
-        }
-        let monthDiff = month2 - month1;
-        if(year1 === year2 && monthDiff === -1) {
-            return true;
-        }
-        return false;
-    }
-    export {
-        dateIncrementDay,
-        dateDecrementDay,
-        dateIncrementMonth,
-        dateDecrementMonth,
-        dateIsNextMonth,
-        dateIsPreviousMonth
-    }
+    return false;
+  };
+  const getDaysInMonth = (unixMillis) => {
+    let date = new Date();
+    date.setTime(unixMillis);
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    date.setFullYear(year, month, 0);
+    return date.getDate();
+  };
+  const getFirstDayInMonth = (unixMillis) => {
+    let date = new Date();
+    date.setTime(unixMillis);
+    date.setDate(1);
+    return date.getTime();
+  };
+  const getWeekDay = (unixMillis) => {
+    let date = new Date();
+    date.setTime(unixMillis);
+    return date.getDay();
+  };
+  const isWeekEnd = (unixMillis) => {
+    let date = new Date();
+    date.setTime(unixMillis);
+    return date.getDay() === 0 || date.getDay() === 6;
+  };
+  const getNextDay = (unixMillis) => {
+    // let date = new Date();
+    // date.setTime(unixMillis);
+    // date.setFullYear(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+    // return date.getTime();
+    return unixMillis + millisInDay;
+  };
+  const getPreviousDay = (unixMillis) => {
+    // let date = new Date();
+    // date.setTime(unixMillis);
+    // date.setMonth(date.getMonth(), date.getDate() - 1);
+    // return date.getTime();
+    return unixMillis - millisInDay;
+  };
+  const getNextMonth = (unixMillis) => {
+    let date = new Date();
+    date.setTime(unixMillis);
+    date.setFullYear(date.getFullYear(), date.getMonth() + 1, 1);
+    return date.getTime();
+  };
+  const getPreviousMonth = (unixMillis) => {
+    let date = new Date();
+    date.setTime(unixMillis);
+    date.setFullYear(date.getFullYear(), date.getMonth() - 1, 1);
+    return date.getTime();
+  };
+
+  const millisInDay = 86400000;
+  export {
+    dateIncrementDay,
+    dateDecrementDay,
+    dateIncrementMonth,
+    dateDecrementMonth,
+    dateIsNextMonth,
+    dateIsPreviousMonth,
+  };
 </script>
 
 <script>
-    import Day from './Day.svelte';
-    import { createEventDispatcher, onMount } from 'svelte';
+  import DayWithEvent from "./DayWithEvent.svelte";
+  import { createEventDispatcher, onMount } from "svelte";
+  //   import Day from "./Day.svelte";
 
-    export let month = 1;
-    export let year = 1970;
-    export let firstDayOrder = 1;
-    export let value = 0;
-    export let unixValue = false;
+  export let date = new Date();
+  export let month = 1;
+  export let year = 1970;
+  export let firstDayOrder = 1;
+  export let value = 0;
+  export let unixValue = false;
+  export let unixMillis = 0;
 
-    const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher();
 
-    let days = [];
-    let dayHeaders = [];
-    // Ensure numbers;
-    month = month - 0;
-    year = year - 0;
-    firstDayOrder = firstDayOrder - 0
+  let days = [];
+  let dayHeaders = [];
+  // Ensure numbers;
+  month = month - 0;
+  year = year - 0;
+  firstDayOrder = firstDayOrder - 0;
+  if (unixMillis > 0) {
+    date.setTime(unixMillis);
+    month = date.getMonth() + 1;
+    year = date.getFullYear();
+    console.log("Set unixMillis in Month", month, year, unixMillis);
+  } else {
+    date.setFullYear(year, month - 1);
+  }
 
-    export let i18n = {
-        monthsToDisplay: [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-        ],
-        weekdays: [
-            "Sunday",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday"
-        ]
-    };
+  export let i18n = {
+    monthsToDisplay: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
+    weekdays: [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ],
+  };
 
-    const currentDate = new Date(1970, 0, 1);
-    const getDate = () => {
-        return currentDate;
+  const dayClicked = (date) => {
+    if (date !== null) {
+      dispatch("day-click", date);
     }
-    const setDate = (year, month, day=1) => {
-        currentDate.setYear(year);
-        currentDate.setMonth(month-1, day);
+  };
+  const fillDayHeaders = () => {
+    let orderIndex = firstDayOrder;
+    dayHeaders = [];
+    for (let i = 0; i < 7; i++) {
+      let weekDayIndex = (orderIndex + i) % 7;
+      dayHeaders.push({
+        index: orderIndex,
+        name: i18n.weekdays[weekDayIndex],
+      });
     }
-    // Set on last day of month.
-    setDate(year, month+1, 0);
+    dayHeaders = [...dayHeaders];
+  };
+  const setDays = (unixMillis) => {
+    const numDays = getDaysInMonth(unixMillis);
+    const firstMonthDay = getFirstDayInMonth(unixMillis);
+    let monthDays = [];
+    let currentDay = firstMonthDay;
+    console.log("current; first; numDays", currentDay, firstMonthDay, numDays);
+    for (let i = 1; i <= numDays; i++) {
+      monthDays.push({
+        weekday: getWeekDay(currentDay),
+        inactive: false,
+        holiday: isWeekEnd(currentDay),
+        // holiday: false,
+        unixMillis: currentDay,
+      });
+      currentDay = getNextDay(currentDay);
+    }
+    let orderDiff = getWeekDay(firstMonthDay) - firstDayOrder;
+    if (orderDiff < 0) {
+      orderDiff = orderDiff + 7;
+    }
+    currentDay = firstMonthDay;
+    for (let i = orderDiff; i > 0; i--) {
+      currentDay = getPreviousDay(currentDay);
+      monthDays = [
+        {
+          weekday: getWeekDay(currentDay),
+          inactive: true,
+          // holiday: isWeekEnd(currentDay),
+          holiday: false,
+          unixMillis: currentDay,
+        },
+        ...monthDays,
+      ];
+    }
+    let nextMonthDiff = 7 - (monthDays.length % 7);
+    if (nextMonthDiff === 7) {
+      nextMonthDiff = 0;
+    }
+    currentDay = getNextMonth(firstMonthDay);
+    for (let i = 0; i < nextMonthDiff; i++) {
+      monthDays.push({
+        weekday: getWeekDay(currentDay),
+        inactive: true,
+        // holiday: isWeekEnd(currentDay),
+        holiday: false,
+        unixMillis: currentDay,
+      });
+      currentDay = getNextDay(currentDay);
+    }
+    days = monthDays;
+  };
+  fillDayHeaders();
+  setDays(unixMillis);
 
-    const dayClicked = (date) => {
-        if(typeof date !== 'undefined') {
-            if(unixValue) {
-                value = date;
-                dispatch('day-click', date);
-            } else {
-                value = Math.round(date.get / 1000);
-                dispatch('day-click', date);
-            }
-        }
-    }
-    const fillDayHeaders = () => {
-        let orderIndex = firstDayOrder;
-        dayHeaders = [];
-        for(let i=0; i<7; i++) {
-            let weekDayIndex = (orderIndex + i) % 7;
-            dayHeaders.push({
-                index: orderIndex,
-                name: i18n.weekdays[weekDayIndex]
-            });
-        }
-        dayHeaders = [...dayHeaders];
-    };
-    const fillDays = () => {
-        const numDays = getDate().getDate();
-        let monthDays = [];
-        // Get first date day index; 0 == Sunday.
-        const firstMonthDay = new Date(year, getDate().getMonth(), 1);
-        for(let i=1; i<=numDays; i++) {
-            let dayDate = new Date(getDate().getFullYear(), getDate().getMonth(), i);
-            let isHoliday = false;
-            if(dayDate.getDay() === 0 || dayDate.getDay() === 6) {
-                // Saturday or sunday
-                isHoliday = true;
-            }
-            monthDays.push({
-                day: dayDate.getDate(),
-                month: dayDate.getMonth()+1,
-                year: dayDate.getFullYear(),
-                weekday: dayDate.getDay(),
-                inactive: false,
-                holiday: isHoliday
-            });
-        }
-        let orderDiff = firstMonthDay.getDay() - firstDayOrder;
-        if(orderDiff < 0) {
-            orderDiff = orderDiff + 7;
-        }
-        for(let i=orderDiff; i>0; i--) {
-            dateDecrementDay(firstMonthDay);
-            monthDays = [{
-                day: firstMonthDay.getDate(),
-                month: firstMonthDay.getMonth()+1,
-                year: firstMonthDay.getFullYear(),
-                weekday: firstMonthDay.getDay(),
-                inactive: true,
-                holiday: false
-            }, ...monthDays];
-        }
-        let nextMonthDiff = 7 - monthDays.length % 7;
-        if(nextMonthDiff === 7) {
-            nextMonthDiff = 0;
-        }
-        firstMonthDay.setFullYear(year);
-        firstMonthDay.setMonth(getDate().getMonth(), 1);
-        dateIncrementMonth(firstMonthDay);
-        for(let i=0; i<nextMonthDiff; i++) {
-            monthDays.push({
-                day: firstMonthDay.getDate()+i,
-                month: firstMonthDay.getMonth()+1,
-                year: firstMonthDay.getFullYear(),
-                weekday: firstMonthDay.getDay(),
-                inactive: true,
-                holiday: false
-            });
-        }
-        days = monthDays;
-    }
-    fillDayHeaders();
-    fillDays();
-
-    let clientWidth = 0;
-    onMount(() => {
-        // clientWidth = 
-    });
+  let clientWidth = 0;
+  onMount(() => {
+    // clientWidth =
+  });
 </script>
 
-<style>
-    .month {
-        display: block;
-    }
-    .days {
-        display: grid;
-        /* grid-template-columns: auto auto auto auto auto auto auto; */
-        grid-template-columns: 14.28% 14.28% 14.28% 14.28% 14.28% 14.28% 14.28%;
-        grid-gap: 0px;
-    }
-    .day-header {
-        box-sizing: border-box;
-        display: block;
-        position: relative;
-        width: 100%;
-        overflow: hidden;
-    }
-</style>
-
-<div class="month" bind:clientWidth={clientWidth}>
-    <div class="days">
-        {#each dayHeaders as day}
-            {#if clientWidth < 720}
-            <div class="day-header" title="{day.name}" data-index={day.index}>{day.name.charAt(0)}</div>
-            {:else}
-            <div class="day-header" title="{day.name}" data-index={day.index}>{day.name}</div>
-            {/if}
-        {/each}
-    </div>
-    <div class="days">
-        {#if days.length}
-            {#each days as day}
-            <Day
-                day={day.day}
-                month={day.month}
-                year={day.year}
-                weekday={day.weekday}
-                inactive={day.inactive}
-                holiday={day.holiday}
-                unixValue={unixValue}
-                on:day-click={(e) => dayClicked(e.detail)} />
-            {/each}
-        {/if}
-    </div>
+<div class="month" bind:clientWidth>
+  <div class="days">
+    {#each dayHeaders as day}
+      {#if clientWidth < 720}
+        <div class="day-header" title={day.name} data-index={day.index}>
+          {day.name.charAt(0)}
+        </div>
+      {:else}
+        <div class="day-header" title={day.name} data-index={day.index}>
+          {day.name}
+        </div>
+      {/if}
+    {/each}
+  </div>
+  <div class="days">
+    {#if days.length}
+      {#each days as day}
+        <DayWithEvent
+          weekday={day.weekday}
+          inactive={day.inactive}
+          holiday={day.holiday}
+          unixMillis={day.unixMillis}
+          {unixValue}
+          on:day-click={(e) => dayClicked(e.detail)}
+        />
+      {/each}
+    {/if}
+  </div>
 </div>
+
+<style>
+  .month {
+    display: block;
+  }
+  .days {
+    display: grid;
+    /* grid-template-columns: auto auto auto auto auto auto auto; */
+    grid-template-columns: 14.28% 14.28% 14.28% 14.28% 14.28% 14.28% 14.28%;
+    grid-gap: 0px;
+  }
+  .day-header {
+    box-sizing: border-box;
+    display: block;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+</style>

@@ -1,12 +1,9 @@
 <script>
   import MonthView from "./MonthView.svelte";
-  import SelectNumber from "../components/SelectNumber.svelte";
 
-  import DayView from "./DayView.svelte";
   export let year = 0;
   export let month = 0;
   export let day = 0;
-  export let unixMillis = 0;
   export let classes = {
     colorBg: "#fff",
     colorBgDisabled: "rgb(133, 151, 161)",
@@ -26,11 +23,11 @@
     }
   }
   export let value = 0;
-  export let view = 0b00000010;
   export let firstDayOrder = 3;
   export let unixValue = false;
 
   const getCssVariablesString = () => {
+    console.log("Setting css vars");
     return (
       "--clr-bg:" +
       classes.colorBg +
@@ -45,21 +42,9 @@
       classes.colorBgHoliday
     );
   };
-  const setYearView = () => {
-    view = 0b00000001;
-  };
-  const setMonthView = () => {
-    view = 0b00000010;
-  };
-  const setDayView = (e) => {
-    view = 0b00000100;
-  };
-  const setEventView = () => {
-    view = 0b00000001;
-  };
   const setDayValue = (e) => {
     value = e.detail;
-    console.log("Day value in top Calendar:", value);
+    console.log(value);
   };
 </script>
 
@@ -74,7 +59,6 @@
     bind:year
     bind:month
     bind:value
-    bind:unixMillis
     on:day-click={(e) => setDayValue(e)}
   />
 </div>
