@@ -11,7 +11,7 @@
   let dateObj;
   onMount(() => {
     dateObj = new Date();
-
+    let nowObj = new Date();
     if (hour < 0) {
       hour = dateObj.getHours();
     } else {
@@ -41,6 +41,15 @@
       dateObj.setTime(unixMillis);
     }
     changeSecond(0);
+    if(hour === 0 && minute === 0) {
+     dateObj.setHours(nowObj.getHours());
+     dateObj.setMinutes(nowObj.getMinutes());
+     dateObj.setSeconds(nowObj.getSeconds())
+     hour = dateObj.getHours();
+     minute = dateObj.getMinutes();
+     second = dateObj.getSeconds();
+     unixMillis = dateObj.getTime();
+    }
     console.log(dateObj, hour, minute, second, unix);
   });
 

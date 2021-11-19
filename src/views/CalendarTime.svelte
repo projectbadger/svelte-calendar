@@ -1,7 +1,3 @@
-<script context="module">
-
-</script>
-
 <script>
   import MonthView from "./MonthView.svelte";
   import SelectNumber from "../components/SelectNumber.svelte";

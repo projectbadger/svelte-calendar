@@ -7,6 +7,7 @@
   export let minute = -1;
   export let second = -1;
   export let classes = "";
+  export let text = "Time";
   export let unixMillis = 0;
   export let position = {
     top: "",
@@ -55,6 +56,7 @@
       : ''}{position.right !== '' ? 'right:' + position.right + ';' : ''}"
   >
     <div class="time">
+        <p>{text}</p>
       <Time
         bind:unix
         bind:hour
@@ -80,9 +82,9 @@
     z-index: 99;
     bottom: 100%;
     /* right: 0; */
-    border: 1px solid black;
+    border: 1px solid black;align-self: 7px;
   }
-  .time {
+  .time {n3m3f00k
     background-color: var(--clr-bg);
   }
 </style>
