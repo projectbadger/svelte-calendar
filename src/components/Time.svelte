@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
+  import { addCurrentTimeHours } from '../utils/unixTime.js'
 
   export let unix = -1;
   export let hour = -1;
@@ -7,25 +8,77 @@
   export let second = -1;
   export let unixMillis = 0;
   export let classes = "";
+  export let showSeconds = false;
 
-  let dateObj;
+  const nowUnix = Math.floor(Date.now() / 1000);
+  const nowSeconds = nowUnix % 60;
+  let nowUnixMinutes = (nowUnix - nowSeconds) / 60;
+  const nowMinutes = nowUnixMinutes % 60;
+  let nowUnixHours = (nowUnixMinutes - nowMinutes) / 60;
+  const nowHours = nowUnixHours % 24;
+
+  let dateObj = new Date();
+  if(unixMillis > 0) {
+    unixMillis = addCurrentTimeHours(unixMillis, hour, minute, second);
+    dateObj.setTime(unixMillis);
+
+  }
+  if (hour <= 0) {
+      hour = nowHours;
+    } else {
+      hour = hour % 24;
+      dateObj.setHours(hour);
+    }
+    if (minute <= 0) {
+      minute = nowMinutes;
+    } else {
+      minute = minute % 60;
+      dateObj.setMinutes(minute);
+    }
+    if (second <= 0) {
+      second = nowSeconds;
+    } else {
+      second = second % 60;
+      dateObj.setSeconds(second);
+    }
+    if(hour === 0 && minute === 0) {
+     dateObj.setHours(nowHours);
+     dateObj.setMinutes(nowMinutes);
+     dateObj.setSeconds(nowSeconds)
+     hour = dateObj.getHours();
+     minute = dateObj.getMinutes();
+     second = dateObj.getSeconds();
+    }
+    unixMillis = dateObj.getTime();
+
   onMount(() => {
-    dateObj = new Date();
+    // dateObj = new Date();
     let nowObj = new Date();
+    if (unixMillis <= 0) {
+      unixMillis = Math.floor(dateObj.getTime() / 1000);
+    } else {
+      dateObj.setTime(unixMillis);
+    }
     if (hour < 0) {
       hour = dateObj.getHours();
+    } else if(dateObj.getHours() === 0) {
+      dateObj.setHours(hour);
     } else {
       hour = hour % 24;
       dateObj.setHours(hour);
     }
     if (minute < 0) {
       minute = dateObj.getMinutes();
+    } else if(dateObj.getMinutes() === 0) {
+      dateObj.setMinutes(minute);
     } else {
       minute = minute % 60;
       dateObj.setMinutes(minute);
     }
     if (second < 0) {
       second = dateObj.getSeconds();
+    } else if(dateObj.getSeconds() === 0) {
+      dateObj.setSeconds(second);
     } else {
       second = second % 60;
       dateObj.setSeconds(second);
@@ -33,12 +86,7 @@
     if (unix <= 0) {
       unix = Math.floor(dateObj.getTime() / 1000);
     } else {
-      dateObj.setTime(unix * 1000);
-    }
-    if (unixMillis <= 0) {
-      unix = Math.floor(dateObj.getTime() / 1000);
-    } else {
-      dateObj.setTime(unixMillis);
+      // dateObj.setTime(unix * 1000);
     }
     changeSecond(0);
     if(hour === 0 && minute === 0) {
@@ -48,8 +96,8 @@
      hour = dateObj.getHours();
      minute = dateObj.getMinutes();
      second = dateObj.getSeconds();
-     unixMillis = dateObj.getTime();
     }
+    unixMillis = dateObj.getTime();
     console.log(dateObj, hour, minute, second, unix);
   });
 
@@ -87,12 +135,13 @@
     unixMillis = unixMillis + 1000 * factor;
     emitChange();
   };
+  // changeSecond(0);
   const emitChange = (e) => {
     // dispatch("change", { hour, minute, second });
     dispatch("change", unixMillis);
     let d = new Date();
     d.setTime(unixMillis);
-    // console.log("Emmitting unix Millis for:", d);
+    console.log("Emmitting unix Millis for:", d);
     // showOptions = true;
   };
 </script>
@@ -141,6 +190,7 @@
       <span class="triangle tr-down tr-inc-dec-trigger" />
     </div>
   </div>
+  {#if showSeconds}
   <div>
     <p>:</p>
   </div>
@@ -164,6 +214,7 @@
       <span class="triangle tr-down tr-inc-dec-trigger" />
     </div>
   </div>
+  {/if}
 </span>
 
 <style>

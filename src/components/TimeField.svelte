@@ -9,6 +9,7 @@
   export let classes = "";
   export let text = "Time";
   export let unixMillis = 0;
+  export let adjustToNow = true;
   export let position = {
     top: "",
     bottom: "",
@@ -41,6 +42,26 @@
   };
   onMount(() => {
     getPositionCss();
+    if (adjustToNow) {
+      if (hour > 0 && minute > 0 && second > 0) {
+        return;
+      }
+      let time = new Date();
+      let timeNow = new Date();
+      if (unixMillis > 0) {
+        time.setTime(unixMillis);
+        if (hour > 0 && minute > 0 && second > 0) {
+          return;
+        }
+      }
+      time.setHours(timeNow.getHours());
+      time.setMinutes(timeNow.getMinutes());
+      time.setSeconds(timeNow.getSeconds());
+      unixMillis = time.getTime();
+      hour = time.getHours();
+      minute = time.getMinutes();
+      second = time.getSeconds();
+    }
   });
 </script>
 
@@ -56,7 +77,7 @@
       : ''}{position.right !== '' ? 'right:' + position.right + ';' : ''}"
   >
     <div class="time">
-        <p>{text}</p>
+      <p>{text}</p>
       <Time
         bind:unix
         bind:hour
@@ -74,17 +95,26 @@
 <style>
   .tp-container {
     position: relative;
+    width: 100%;
   }
   .tm-container {
     display: block;
     position: absolute;
-    /* background-color: var(--clr-bg); */
+    background-color: var(--clr-bg);
     z-index: 99;
-    bottom: 100%;
-    /* right: 0; */
-    border: 1px solid black;align-self: 7px;
+    top: 0;
+    left: 0;
+    right: 0;
+    border: 1px solid black;
+    align-self: 7px;
+    border-radius: 5px;
   }
   .time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-color: var(--clr-bg);
+    padding: 1rem;
+    border-radius: 5px;
   }
 </style>

@@ -2,6 +2,11 @@
   import Month from "../components/Month.svelte";
   import Select from "../components/Select.svelte";
   import SelectNumber from "../components/SelectNumber.svelte";
+  import DaysGenerator from "../utils/generateDays.js";
+  import { getMonthNames } from "../utils/i18n.js";
+  import { addCurrentTimeHours } from "../utils/unixTime.js";
+  import Day from '../components/Day.svelte'
+  import TimeField from '../components/TimeField.svelte'
   import { createEventDispatcher } from "svelte";
 
   const STATUS_LEFT = 0b00000100;
@@ -13,33 +18,8 @@
   export let month = 0;
   export let firstDayOrder = 1;
   export let value = 0;
-  export let i18n = {
-    monthsToDisplay: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
-    weekdays: [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ],
-  };
   export let unixValue = false;
-  export let unixMillis = 0;
+  export let unixMillis = Date.now();
 
   if (year === 0 || month === 0) {
     let currentDate = new Date();
@@ -50,9 +30,12 @@
       month = currentDate.getMonth() + 1;
     }
   }
+//   const daysGenerator = new DaysGenerator(unixMillis, firstDayOrder, false);
+//   console.log("MonthView days generator:", daysGenerator)
 
   let navigation = STATUS_ACTIVE;
-  let clientWidth;
+  let showTime = false;
+  // let clientWidth;
 
   let monthsArr = [];
   let dateActive;
@@ -76,11 +59,13 @@
       }
     }
     if (index < 0) {
+        let unixM = new Date(year, month - 1, 1).getTime();
       dateActive = {
         year: year,
         month: month,
-        unixMillis: new Date(year, month-1, 1).getTime(),
+        unixMillis: unixM,
         status: STATUS_ACTIVE,
+        days: new DaysGenerator(unixM, firstDayOrder, false)
       };
       monthsArr.push(dateActive);
     }
@@ -137,8 +122,52 @@
     showYearSelector = true;
   };
 
-  const dayClicked = (e) => {
-    dispatch("day-click", e.detail);
+  const dayClicked = (e, timeChange=false) => {
+    e.preventDefault();
+      unixMillis = e.detail;
+      let date = new Date();
+      if(typeof e.detail === "number") {
+        unixMillis = e.detail;
+        date.setTime(unixMillis);
+      } else {
+        unixMillis = e.detail.getTime();
+        date = e.detail
+      }
+      
+      dispatch("day-click", e.detail);
+
+    setCloseListener(true)
+  };
+
+  let timeContainer;
+  let timeFirstClick = true;
+  const closeTimeView = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if(timeFirstClick) {
+      timeFirstClick = false;
+      return
+    }
+    if (timeContainer.contains(e.target)) {
+      return;
+    }
+
+    console.log("Closing Time display");
+
+    // if(e.target.contains())
+    setCloseListener(false);
+  };
+  const setCloseListener = (active = true) => {
+    document.removeEventListener("click", closeTimeView);
+      console.log("Removed listener");
+      timeFirstClick = false;
+      showTime = false;
+    if (active) {
+      document.addEventListener("click", closeTimeView);
+      console.log("Added listener");
+      timeFirstClick = true;
+      showTime = true;
+    }
   };
 </script>
 
@@ -149,8 +178,8 @@
         <span><div class="triangle tr-left" on:click={() => navLeft()} /></span>
         <span>
           <Select value={aMonth.month} on:change={(e) => monthChange(e)}>
-            {#each i18n.monthsToDisplay as monthOption, index}
-              <option value={index + 1}>{monthOption}</option>
+            {#each getMonthNames() as monthName, index}
+              <option value={index + 1}>{monthName}</option>
             {/each}
           </Select>
         </span>
@@ -165,7 +194,16 @@
           ><div class="triangle tr-right" on:click={() => navRight()} /></span
         >
       </div>
-      <div class="months" bind:clientWidth>
+      <div class="time-con" bind:this={timeContainer}>
+      {#if showTime}
+      <TimeField
+        unixMillis={addCurrentTimeHours(unixMillis)}
+        bind:value
+        on:change={(e) => dayClicked(e)}
+      />
+      {/if}
+    </div>
+      <div class="months">
         <div>
           <Month
             year={aMonth.year}
@@ -173,10 +211,20 @@
             unixMillis={aMonth.unixMillis}
             {firstDayOrder}
             {unixValue}
-            {i18n}
+            setDays={false}
             bind:value
-            on:day-click={(e) => dayClicked(e)}
-          />
+          >
+            {#each aMonth.days.getDays() as day}
+              <Day
+                weekday={day.weekday}
+                inactive={day.inactive}
+                holiday={day.holiday}
+                unixMillis={day.unixMillis}
+                {unixValue}
+                on:day-click={(e) => dayClicked(e)}
+              />
+            {/each}
+          </Month>
         </div>
       </div>
     {/if}

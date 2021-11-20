@@ -50,7 +50,7 @@
 </script>
 
 <script>
-  import Day from "./Day.svelte";
+  import DayWithEvent from "./DayWithEvent.svelte";
   import DaysGenerator from "../utils/generateDays.js";
   import { getWeekDays } from "../utils/i18n";
   import { createEventDispatcher, onMount } from "svelte";
@@ -116,7 +116,7 @@
   <div class="days">
     <slot>
       {#each daysGenerator.getDays() as day}
-        <Day
+        <DayWithEvent
           weekday={day.weekday}
           inactive={day.inactive}
           holiday={day.holiday}

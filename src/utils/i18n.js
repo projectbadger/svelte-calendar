@@ -29,10 +29,13 @@ const getI18N = () => {
 const setI18N = (translations) => {
   i18n = translations;
 };
-const getWeekdays = () => {
+const getWeekDays = () => {
   return i18n.weekdays;
 };
-const setWeekdays = (weekdays) => {
+const getWeekDayByIndex = (index) => {
+  return i18n.weekdays[index];
+};
+const setWeekDays = (weekdays) => {
   i18n.weekdays = weekdays;
 };
 const getMonthNames = () => {
@@ -44,8 +47,9 @@ const setMonthNames = (monthdays) => {
 export {
   getI18N,
   setI18N,
-  getWeekdays,
-  setWeekdays,
+  getWeekDays,
+  setWeekDays,
   getMonthNames,
   setMonthNames,
+  getWeekDayByIndex
 };
