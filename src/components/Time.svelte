@@ -17,6 +17,15 @@
   let nowUnixHours = (nowUnixMinutes - nowMinutes) / 60;
   const nowHours = nowUnixHours % 24;
 
+  const setFromUnixMillis = (unixMillis) => {
+    dateObj.setTime(unixMillis);
+    hour = dateObj.getHours();
+    minute = dateObj.getMinutes();
+    second = dateObj.getSeconds();
+  }
+
+  $: unixMillis, setFromUnixMillis(unixMillis);
+
   let dateObj = new Date();
   if(unixMillis > 0) {
     unixMillis = addCurrentTimeHours(unixMillis, hour, minute, second);

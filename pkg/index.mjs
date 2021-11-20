@@ -2922,7 +2922,7 @@
     const { console: console_1$2 } = globals;
     const file$4 = "src/components/Time.svelte";
 
-    // (193:2) {#if showSeconds}
+    // (202:2) {#if showSeconds}
     function create_if_block$1(ctx) {
     	let div0;
     	let p;
@@ -2952,21 +2952,21 @@
     			t3 = space();
     			div2 = element("div");
     			span1 = element("span");
-    			add_location(p, file$4, 194, 4, 5321);
-    			add_location(div0, file$4, 193, 2, 5311);
+    			add_location(p, file$4, 203, 4, 5555);
+    			add_location(div0, file$4, 202, 2, 5545);
     			attr_dev(span0, "class", "triangle tr-up tr-inc-dec-trigger svelte-19eog52");
-    			add_location(span0, file$4, 201, 6, 5496);
+    			add_location(span0, file$4, 210, 6, 5730);
     			attr_dev(div1, "class", "increment tr-inc-dec-trigger svelte-19eog52");
-    			add_location(div1, file$4, 197, 4, 5382);
+    			add_location(div1, file$4, 206, 4, 5616);
     			attr_dev(input, "class", "number svelte-19eog52");
     			attr_dev(input, "type", "number");
-    			add_location(input, file$4, 203, 4, 5562);
+    			add_location(input, file$4, 212, 4, 5796);
     			attr_dev(span1, "class", "triangle tr-down tr-inc-dec-trigger svelte-19eog52");
-    			add_location(span1, file$4, 213, 6, 5818);
+    			add_location(span1, file$4, 222, 6, 6052);
     			attr_dev(div2, "class", "decrement tr-inc-dec-trigger svelte-19eog52");
-    			add_location(div2, file$4, 209, 4, 5703);
+    			add_location(div2, file$4, 218, 4, 5937);
     			attr_dev(div3, "class", "rows seconds-container svelte-19eog52");
-    			add_location(div3, file$4, 196, 2, 5341);
+    			add_location(div3, file$4, 205, 2, 5575);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -3011,7 +3011,7 @@
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(193:2) {#if showSeconds}",
+    		source: "(202:2) {#if showSeconds}",
     		ctx
     	});
 
@@ -3073,35 +3073,35 @@
     			t7 = space();
     			if (if_block) if_block.c();
     			attr_dev(span0, "class", "triangle tr-up tr-inc-dec-trigger svelte-19eog52");
-    			add_location(span0, file$4, 154, 6, 4318);
+    			add_location(span0, file$4, 163, 6, 4552);
     			attr_dev(div0, "class", "increment tr-inc-dec-trigger svelte-19eog52");
-    			add_location(div0, file$4, 150, 4, 4206);
+    			add_location(div0, file$4, 159, 4, 4440);
     			attr_dev(input0, "class", "number svelte-19eog52");
     			attr_dev(input0, "type", "number");
-    			add_location(input0, file$4, 156, 4, 4384);
+    			add_location(input0, file$4, 165, 4, 4618);
     			attr_dev(span1, "class", "triangle tr-down tr-inc-dec-trigger svelte-19eog52");
-    			add_location(span1, file$4, 166, 6, 4634);
+    			add_location(span1, file$4, 175, 6, 4868);
     			attr_dev(div1, "class", "decrement tr-inc-dec-trigger svelte-19eog52");
-    			add_location(div1, file$4, 162, 4, 4521);
+    			add_location(div1, file$4, 171, 4, 4755);
     			attr_dev(div2, "class", "rows hours-container svelte-19eog52");
-    			add_location(div2, file$4, 149, 2, 4167);
-    			add_location(p, file$4, 170, 4, 4719);
-    			add_location(div3, file$4, 169, 2, 4709);
+    			add_location(div2, file$4, 158, 2, 4401);
+    			add_location(p, file$4, 179, 4, 4953);
+    			add_location(div3, file$4, 178, 2, 4943);
     			attr_dev(span2, "class", "triangle tr-up tr-inc-dec-trigger svelte-19eog52");
-    			add_location(span2, file$4, 177, 6, 4894);
+    			add_location(span2, file$4, 186, 6, 5128);
     			attr_dev(div4, "class", "increment tr-inc-dec-trigger svelte-19eog52");
-    			add_location(div4, file$4, 173, 4, 4780);
+    			add_location(div4, file$4, 182, 4, 5014);
     			attr_dev(input1, "class", "number svelte-19eog52");
     			attr_dev(input1, "type", "number");
-    			add_location(input1, file$4, 179, 4, 4960);
+    			add_location(input1, file$4, 188, 4, 5194);
     			attr_dev(span3, "class", "triangle tr-down tr-inc-dec-trigger svelte-19eog52");
-    			add_location(span3, file$4, 189, 6, 5216);
+    			add_location(span3, file$4, 198, 6, 5450);
     			attr_dev(div5, "class", "decrement tr-inc-dec-trigger svelte-19eog52");
-    			add_location(div5, file$4, 185, 4, 5101);
+    			add_location(div5, file$4, 194, 4, 5335);
     			attr_dev(div6, "class", "rows minutes-container svelte-19eog52");
-    			add_location(div6, file$4, 172, 2, 4739);
+    			add_location(div6, file$4, 181, 2, 4973);
     			attr_dev(span4, "class", span4_class_value = "cols time-container " + /*classes*/ ctx[3] + " svelte-19eog52");
-    			add_location(span4, file$4, 148, 0, 4120);
+    			add_location(span4, file$4, 157, 0, 4354);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3211,6 +3211,14 @@
     	const nowMinutes = nowUnixMinutes % 60;
     	let nowUnixHours = (nowUnixMinutes - nowMinutes) / 60;
     	const nowHours = nowUnixHours % 24;
+
+    	const setFromUnixMillis = unixMillis => {
+    		dateObj.setTime(unixMillis);
+    		$$invalidate(0, hour = dateObj.getHours());
+    		$$invalidate(1, minute = dateObj.getMinutes());
+    		$$invalidate(2, second = dateObj.getSeconds());
+    	};
+
     	let dateObj = new Date();
 
     	if (unixMillis > 0) {
@@ -3255,7 +3263,7 @@
     		let nowObj = new Date();
 
     		if (unixMillis <= 0) {
-    			$$invalidate(9, unixMillis = Math.floor(dateObj.getTime() / 1000));
+    			$$invalidate(8, unixMillis = Math.floor(dateObj.getTime() / 1000));
     		} else {
     			dateObj.setTime(unixMillis);
     		}
@@ -3288,7 +3296,7 @@
     		}
 
     		if (unix <= 0) {
-    			$$invalidate(8, unix = Math.floor(dateObj.getTime() / 1000));
+    			$$invalidate(9, unix = Math.floor(dateObj.getTime() / 1000));
     		} // dateObj.setTime(unix * 1000);
 
     		changeSecond(0);
@@ -3302,7 +3310,7 @@
     			$$invalidate(2, second = dateObj.getSeconds());
     		}
 
-    		$$invalidate(9, unixMillis = dateObj.getTime());
+    		$$invalidate(8, unixMillis = dateObj.getTime());
     		console.log(dateObj, hour, minute, second, unix);
     	});
 
@@ -3315,9 +3323,9 @@
     		$$invalidate(2, second = dateObj.getSeconds());
     		$$invalidate(1, minute = dateObj.getMinutes());
     		$$invalidate(0, hour = dateObj.getHours());
-    		$$invalidate(8, unix = Math.floor(dateObj.getTime() / 1000));
+    		$$invalidate(9, unix = Math.floor(dateObj.getTime() / 1000));
     		emitChange();
-    		$$invalidate(9, unixMillis = unixMillis + 1000 * 60 * 60 * factor);
+    		$$invalidate(8, unixMillis = unixMillis + 1000 * 60 * 60 * factor);
     	};
 
     	const changeMinute = factor => {
@@ -3326,8 +3334,8 @@
     		$$invalidate(2, second = dateObj.getSeconds());
     		$$invalidate(1, minute = dateObj.getMinutes());
     		$$invalidate(0, hour = dateObj.getHours());
-    		$$invalidate(8, unix = Math.floor(dateObj.getTime() / 1000));
-    		$$invalidate(9, unixMillis = unixMillis + 1000 * 60 * factor);
+    		$$invalidate(9, unix = Math.floor(dateObj.getTime() / 1000));
+    		$$invalidate(8, unixMillis = unixMillis + 1000 * 60 * factor);
     		emitChange();
     	};
 
@@ -3337,8 +3345,8 @@
     		$$invalidate(2, second = dateObj.getSeconds());
     		$$invalidate(1, minute = dateObj.getMinutes());
     		$$invalidate(0, hour = dateObj.getHours());
-    		$$invalidate(8, unix = Math.floor(dateObj.getTime() / 1000));
-    		$$invalidate(9, unixMillis = unixMillis + 1000 * factor);
+    		$$invalidate(9, unix = Math.floor(dateObj.getTime() / 1000));
+    		$$invalidate(8, unixMillis = unixMillis + 1000 * factor);
     		emitChange();
     	};
 
@@ -3396,11 +3404,11 @@
     	const click_handler_5 = () => changeSecond(-1);
 
     	$$self.$$set = $$props => {
-    		if ('unix' in $$props) $$invalidate(8, unix = $$props.unix);
+    		if ('unix' in $$props) $$invalidate(9, unix = $$props.unix);
     		if ('hour' in $$props) $$invalidate(0, hour = $$props.hour);
     		if ('minute' in $$props) $$invalidate(1, minute = $$props.minute);
     		if ('second' in $$props) $$invalidate(2, second = $$props.second);
-    		if ('unixMillis' in $$props) $$invalidate(9, unixMillis = $$props.unixMillis);
+    		if ('unixMillis' in $$props) $$invalidate(8, unixMillis = $$props.unixMillis);
     		if ('classes' in $$props) $$invalidate(3, classes = $$props.classes);
     		if ('showSeconds' in $$props) $$invalidate(4, showSeconds = $$props.showSeconds);
     		if ('showOptions' in $$props) $$invalidate(10, showOptions = $$props.showOptions);
@@ -3423,6 +3431,7 @@
     		nowMinutes,
     		nowUnixHours,
     		nowHours,
+    		setFromUnixMillis,
     		dateObj,
     		dispatch,
     		showOptions,
@@ -3433,11 +3442,11 @@
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('unix' in $$props) $$invalidate(8, unix = $$props.unix);
+    		if ('unix' in $$props) $$invalidate(9, unix = $$props.unix);
     		if ('hour' in $$props) $$invalidate(0, hour = $$props.hour);
     		if ('minute' in $$props) $$invalidate(1, minute = $$props.minute);
     		if ('second' in $$props) $$invalidate(2, second = $$props.second);
-    		if ('unixMillis' in $$props) $$invalidate(9, unixMillis = $$props.unixMillis);
+    		if ('unixMillis' in $$props) $$invalidate(8, unixMillis = $$props.unixMillis);
     		if ('classes' in $$props) $$invalidate(3, classes = $$props.classes);
     		if ('showSeconds' in $$props) $$invalidate(4, showSeconds = $$props.showSeconds);
     		if ('nowUnixMinutes' in $$props) nowUnixMinutes = $$props.nowUnixMinutes;
@@ -3450,6 +3459,12 @@
     		$$self.$inject_state($$props.$$inject);
     	}
 
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty[0] & /*unixMillis*/ 256) {
+    			(setFromUnixMillis(unixMillis));
+    		}
+    	};
+
     	return [
     		hour,
     		minute,
@@ -3459,8 +3474,8 @@
     		changeHour,
     		changeMinute,
     		changeSecond,
-    		unix,
     		unixMillis,
+    		unix,
     		showOptions,
     		click_handler,
     		input0_input_handler,
@@ -3488,11 +3503,11 @@
     			create_fragment$4,
     			safe_not_equal,
     			{
-    				unix: 8,
+    				unix: 9,
     				hour: 0,
     				minute: 1,
     				second: 2,
-    				unixMillis: 9,
+    				unixMillis: 8,
     				classes: 3,
     				showSeconds: 4,
     				showOptions: 10
